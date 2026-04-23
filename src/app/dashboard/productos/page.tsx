@@ -20,6 +20,7 @@ export default function ProductosPage() {
   const [filtro, setFiltro] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [carrito, setCarrito] = useState<ProductoCarrito[]>([]);
+  const [loading, setLoading] = useState(true);
   const [nuevo, setNuevo] = useState<ProductoCarrito>({
     nombre: "", descripcion: "", cantidad: 0, nuevos: 0, usados: 0, notas: "", fechaIngreso: "", espacioId: ""
   });
@@ -27,12 +28,14 @@ export default function ProductosPage() {
   useEffect(() => { loadAll(); }, []);
 
   async function loadAll() {
+    setLoading(true);
     const [p, e] = await Promise.all([
       productService.getAll(),
       spaceService.getAll(),
     ]);
     setProductos(p);
     setEspacios(e);
+    setLoading(false);
   }
 
   function agregarAlCarrito() {
@@ -109,7 +112,9 @@ export default function ProductosPage() {
               </tr>
             </thead>
             <tbody>
-              {productosFiltrados().length === 0 ? (
+              {loading ? (
+                <tr><td colSpan={8} className="p-8 text-center text-black">Cargando...</td></tr>
+              ) : productosFiltrados().length === 0 ? (
                 <tr><td colSpan={8} className="p-3 text-center text-black">Sin productos</td></tr>
               ) : productosFiltrados().map(p => (
                 <tr key={p.id} className="border-t">

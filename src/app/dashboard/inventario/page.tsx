@@ -8,10 +8,12 @@ export default function InventarioPage() {
   const [espacios, setEspacios] = useState<Space[]>([]);
   const [espacioSeleccionado, setEspacioSeleccionado] = useState<string>("");
   const [filtro, setFiltro] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => { loadAll(); }, []);
 
   async function loadAll() {
+    setLoading(true);
     const [i, e] = await Promise.all([
       inventoryService.getAllItems(),
       spaceService.getAll(),
@@ -19,6 +21,7 @@ export default function InventarioPage() {
     setItems(i);
     setEspacios(e);
     if (e.length > 0) setEspacioSeleccionado(e[0].id);
+    setLoading(false);
   }
 
   async function handleMovement(itemId: string, tipo: "ENTRADA" | "SALIDA") {
@@ -78,7 +81,9 @@ export default function InventarioPage() {
             </tr>
           </thead>
           <tbody>
-            {itemsDelEspacio.length === 0 ? (
+            {loading ? (
+              <tr><td colSpan={4} className="p-8 text-center text-black">Cargando...</td></tr>
+            ) : itemsDelEspacio.length === 0 ? (
               <tr><td colSpan={4} className="p-3 text-center text-black">Sin productos en este espacio</td></tr>
             ) : itemsDelEspacio.map(item => (
               <tr key={item.id} className="border-t">

@@ -11,6 +11,7 @@ export default function ReportePage() {
   const [filtroProducto, setFiltroProducto] = useState("");
   const [soloStock, setSoloStock] = useState(false);
   const [mostrarSelectorEspacios, setMostrarSelectorEspacios] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     Promise.all([
@@ -20,6 +21,7 @@ export default function ReportePage() {
       setItems(itemsData);
       setSpaces(spacesData);
       setEspaciosSeleccionados(spacesData.map(s => s.id));
+      setLoading(false);
     });
   }, []);
 
@@ -286,7 +288,9 @@ export default function ReportePage() {
             </tr>
           </thead>
           <tbody>
-            {itemsFiltrados.length === 0 ? (
+            {loading ? (
+              <tr><td colSpan={3} className="p-8 text-center text-black">Cargando...</td></tr>
+            ) : itemsFiltrados.length === 0 ? (
               <tr><td colSpan={3} className="p-3 text-center text-black">Sin resultados</td></tr>
             ) : itemsFiltrados.map(item => (
               <tr key={item.id} className="border-t">

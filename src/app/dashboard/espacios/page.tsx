@@ -8,13 +8,16 @@ export default function EspaciosPage() {
   const [filtro, setFiltro] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [carrito, setCarrito] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
   const [nuevo, setNuevo] = useState("");
 
   useEffect(() => { loadEspacios(); }, []);
 
   async function loadEspacios() {
+    setLoading(true);
     const data = await spaceService.getAll();
     setEspacios(data);
+    setLoading(false);
   }
 
   function agregarAlCarrito() {
@@ -77,7 +80,9 @@ export default function EspaciosPage() {
               </tr>
             </thead>
             <tbody>
-              {espaciosFiltrados().length === 0 ? (
+              {loading ? (
+                <tr><td colSpan={2} className="p-8 text-center text-black">Cargando...</td></tr>
+              ) : espaciosFiltrados().length === 0 ? (
                 <tr><td colSpan={2} className="p-3 text-center text-black">Sin espacios</td></tr>
               ) : espaciosFiltrados().map(e => (
                 <tr key={e.id} className="border-t">
