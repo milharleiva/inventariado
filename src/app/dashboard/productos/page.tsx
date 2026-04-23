@@ -104,12 +104,13 @@ export default function ProductosPage() {
                 <th className="p-3 text-center text-black">Nuevos</th>
                 <th className="p-3 text-center text-black">Usados</th>
                 <th className="p-3 text-left text-black">Fecha</th>
+                <th className="p-3 text-left text-black">Notas</th>
                 <th className="p-3 text-center text-black w-16">Del</th>
               </tr>
             </thead>
             <tbody>
               {productosFiltrados().length === 0 ? (
-                <tr><td colSpan={7} className="p-3 text-center text-black">Sin productos</td></tr>
+                <tr><td colSpan={8} className="p-3 text-center text-black">Sin productos</td></tr>
               ) : productosFiltrados().map(p => (
                 <tr key={p.id} className="border-t">
                   <td className="p-3 text-black">{p.nombre}</td>
@@ -118,6 +119,7 @@ export default function ProductosPage() {
                   <td className="p-3 text-center text-black">{p.nuevos}</td>
                   <td className="p-3 text-center text-black">{p.usados}</td>
                   <td className="p-3 text-black">{p.fechaIngreso || "-"}</td>
+                  <td className="p-3 text-black">{p.notas || "-"}</td>
                   <td className="p-3 text-center">
                     <button onClick={() => handleEliminar(p.id)} className="text-red-500 hover:text-red-700">×</button>
                   </td>
