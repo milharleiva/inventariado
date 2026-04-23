@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  nombre    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  nombre      String
+  descripcion String?
+  cantidad   Int     @default(0)
+  nuevos     Int     @default(0)
+  usados     Int     @default(0)
+  notas      String?
+  fechaIngreso String?
+  createdAt   DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  items      InventoryItem[]
+
+  @@map("products")
+}
+
+model Space {
+  id        String   @id @default(cuid())
+  nombre    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  items    InventoryItem[]
+
+  @@map("spaces")
+}
+
+model InventoryItem {
+  id         String   @id @default(cuid())
+  cantidad   Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  spaceId    String
+  space      Space   @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+
+  movements  Movement[]
+
+  @@unique([productId, spaceId])
+  @@map("inventory_items")
+}
+
+enum MovementType {
+  ENTRADA
+  SALIDA
+}
+
+model Movement {
+  id              String       @id @default(cuid())
+  tipo            MovementType
+  cantidad        Int
+  nota            String?
+  createdAt       DateTime     @default(now())
+
+  inventoryItemId String
+  inventoryItem   InventoryItem @relation(fields: [inventoryItemId], references: [id], onDelete: Cascade)
+
+  @@map("movements")
+}

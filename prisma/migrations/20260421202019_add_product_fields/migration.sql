@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "products" ADD COLUMN     "cantidad" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "fechaIngreso" TEXT,
+ADD COLUMN     "nuevos" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "usados" INTEGER NOT NULL DEFAULT 0;
